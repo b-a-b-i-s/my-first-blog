@@ -12,9 +12,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+import dj_database_url
+from environs import Env
+import datetime
+# import logging
 
-load_dotenv()
+env = Env()
+env.read_env()  # read .env file, if it exists
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET', 'django-insecure-ml-2g*40m8@x=!qadtgq@u(k6fh7=%%+&2jfr_a070b*@nl-*a')
+SECRET_KEY = env('SECRET', 'django-insecure-ml-2g*40m8@x=!qadtgq@u(k6fh7=%%+&2jfr_a070b*@nl-*a')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '.herokuapp.com']
 
@@ -86,6 +90,9 @@ DATABASES = {
     }
 }
 
+if env('DATABASE_URL', None):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -136,3 +143,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 
+if env('HOST', None) == 'heroku':
+    
+    ''' Configure Django App for Heroku. '''
+
+    INSTALLED_APPS.append("whitenoise.runserver_nostatic")
+    MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
