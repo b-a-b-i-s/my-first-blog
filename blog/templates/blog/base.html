@@ -15,7 +15,9 @@
                     <a href="{% url 'post_new' %}" class="top-menu">
                         <i class="fa-solid fa-plus"></i>
                     </a>
-                    {% comment %} <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a> {% endcomment %}
+                    <a href="{% url 'post_draft_list' %}" class="top-menu">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
                     <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
                 {% else %}
                     <a href="{% url 'login' %}" class="top-menu"><i class="fa-solid fa-lock"></i></a>
